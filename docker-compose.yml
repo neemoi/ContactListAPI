@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  testtaskcontactlistapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=ContactList;Username=postgres;Password=admin
+    depends_on:
+      - db
+    networks:
+      - contactlist-network
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ContactList
+    ports:
+      - "5432:5432"
+    networks:
+      - contactlist-network
+
+networks:
+  contactlist-network:
+    driver: bridge
